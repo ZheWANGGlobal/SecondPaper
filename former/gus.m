@@ -1,0 +1,88 @@
+% mu = ones(100,1)*(-3);
+mu = [-3,-3];
+SIGMA = [1 0; 0 2];
+% mat1 = eye(100);
+r = mvnrnd(mu,SIGMA,100);
+% plot(r(:,1),r(:,2),'o');
+% hold on;
+% mu = ones(100,1)*3;
+mu=[3,3];
+SIGMA = [ 1 0; 0 2];
+% mat2 = eye(100);
+r2 = mvnrnd(mu,SIGMA,100);
+
+x_trn = [r;r2];
+y_trn = [linspace(0,0,100)';linspace(1,1,100)'];
+% r0=findrationofbw(x_trn,y_trn);
+% plot(r2(:,1),r2(:,2),'*')
+% axis([-8 8 -15 15])
+% hold on;
+V_LDA_self = LDA(x_trn , y_trn,1);
+% x1 = linspace(-8,8,2);
+% y1 = (V_LDA_self(1,1)/V_LDA_self(2,1))*x1;
+% plot(x1,y1,'cyan');
+% x_tst1 = x_trn*V_LDA_self;
+% r1=findrationofbw(x_tst1,y_trn);
+% hold on;
+[V_LFDA,x_newtrn]=LFDA(x_trn',y_trn,1);
+% x2 = linspace(-8,8,2);
+% y2 = (V_LFDA(1,1)/V_LFDA(2,1))*x2;
+% plot(x2,y2,'green');
+% x_tst2 = x_trn*V_LFDA;
+% r2=findrationofbw(x_tst2,y_trn);
+% hold on;
+[X_trn, V_LPP_SELF] = lpp_self(x_trn, 1);
+% x3 = linspace(-8,8,2);
+% y3 = (V_LPP_SELF.M(1,1)/V_LPP_SELF.M(2,1))*x3;
+% plot(x3,y3,'m');
+% x_tst3 = x_trn*V_LPP_SELF.M;
+% r3=findrationofbw(x_tst3,y_trn);
+% hold on ;
+V_SLFDA=SparseLocal_FDA(x_trn',y_trn,1);
+% x5 = linspace(-8,8,2);
+% y5 = (V_SLFDA(1,1)/V_SLFDA(2,1))*x5;
+% plot(x5,y5,'black');
+% x_tst5 = x_trn*V_SLFDA;
+% r5=findrationofbw(x_tst5,y_trn);
+% hold on ;
+V_MFA = MFA(x_trn,y_trn,1);
+% x6 = linspace(-8,8,2);
+% y6 = (V_MFA(1,1)/V_MFA(2,1))*x6;
+% x_tst6 = x_trn*V_MFA;
+% r6=findrationofbw(x_tst6,y_trn);
+% plot(x6,y6,'blue');
+% hold on;
+[V_SMFA,PP_SMFA]=sparse_MFA(x_trn,y_trn,1); 
+X_V = x_trn*V_SMFA;
+X_P = x_trn*PP_SMFA;
+plot(X_V,'red');
+hold on;
+plot(X_P);
+% x4 = linspace(-8,8,2);
+% y4 = (V_SMFA_PCA(1,1)/V_SMFA_PCA(2,1))*x4;
+% plot(x4,y4,'red');
+% x_tst4 = x_trn*V_SMFA_PCA;
+% r4=findrationofbw(x_tst4,y_trn);
+% legend('Class 1','Class 2','LDA','LFDA','LPP','SLFDA','MFA','SMFA');
+% xlabel('Dimension');
+% ylabel('Recognition rate');
+
+
+%randn生成均值0方差1的随机数
+% blue=randn(100,2)+3.5;
+% red=randn(10,2)+1;                
+% plot(blue(:,1),blue(:,2),'blue*',red(:,1),red(:,2),'red*')
+
+% 
+% m=50;
+% n=2;
+% x=0:1:100;
+% y=exp(-(x-m).^2/(2*n^2));
+% subplot(2,1,1)
+% plot(x,y)
+% subplot(2,1,2)
+% % z=normrnd(50,2,100,1);
+% % plot(z)
+% z=0:1:100; 
+% d=normpdf(z,50,2); 
+% plot(z,d)
