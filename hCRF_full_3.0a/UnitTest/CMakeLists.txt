@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 2.6)
+project("UnitTestHCRF")
+set(CMAKE_CXX_FLAGS "-Wall")
+
+IF (OPENMP GREATER 0)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+ENDIF()
+# For debugging
+IF (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  ADD_DEFINITIONS(-D_DEBUG)
+ENDIF()
+
+ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/../libs/shared/hCRF hCRF)
+INCLUDE_DIRECTORIES(${hCRF_SOURCE_DIR}/include)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) 
+ADD_EXECUTABLE("UnitTestHCRF" "TestModel.cpp" "TestShared.cpp" 
+  "UnitTestHCRF.cpp" "TestInference.cpp" "TestOptimizer.cpp")
+
+TARGET_LINK_LIBRARIES("UnitTestHCRF" hCRF)
+TARGET_LINK_LIBRARIES("UnitTestHCRF" asa)
+TARGET_LINK_LIBRARIES("UnitTestHCRF" cgDescent)
+TARGET_LINK_LIBRARIES("UnitTestHCRF" lbfgs)
+TARGET_LINK_LIBRARIES("UnitTestHCRF" owlqn)
+TARGET_LINK_LIBRARIES("UnitTestHCRF" uncoptim)
+# We need gtest to be installed
+FIND_LIBRARY(LIB_GTEST "gtest")
+TARGET_LINK_LIBRARIES("UnitTestHCRF" ${LIB_GTEST})
+# gtest need pthread library
+FIND_LIBRARY(LIB_PTHREAD "pthread")
+TARGET_LINK_LIBRARIES("UnitTestHCRF" ${LIB_PTHREAD})
+
+SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
+INSTALL(TARGETS UnitTestHCRF 
+  RUNTIME DESTINATION .)
+
