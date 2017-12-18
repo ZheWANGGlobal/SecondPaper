@@ -1,12 +1,16 @@
 clear
-load Jaffe
-load JaffeX_Six
-load JaffeY_Six
-load JaffeY_ThreeCate
+% load Jaffe
+% load JaffeX_Six
+% load JaffeY_Six
+% load JaffeY_ThreeCate
+load x_trn
+load x_tst
+load y_tst
+load y_trn
 % clear Y1;
 % Y=Y1;
 N1=20;
-X=double(X)./255;
+% X=double(X)./255;
 
 global p1 knn
  knn=1;
@@ -14,9 +18,9 @@ p1=2^-8;
 C=100;
 ker='linear';
 ker='rbf';
-for loop=1:50
+% for loop=1:50
 %  [x_trn,y_trn,x_tst,y_tst,trainindex,testindex]=sample_random(X,Y,N1);
-[x_trn,y_trn,x_tst,y_tst,trainindex,testindex]=sample_random(JaffeX_Six,JaffeY_Six,N1);
+% [x_trn,y_trn,x_tst,y_tst,trainindex,testindex]=sample_random(JaffeX_Six,JaffeY_Six,N1);
 %  [~,P]=pca(x_trn,size(x_trn,1));
 %  newx_trn=x_trn*P;
 %  newx_tst=x_tst*P;
@@ -24,13 +28,15 @@ for loop=1:50
 %   mean(out==y_tst)
  %% KNN
    [out]=cknear(knn,x_trn,y_trn,x_tst); 
-  Acc(loop,1)=mean(out==y_tst);
+%   Acc(loop,1)=mean(out==y_tst);
+Acc(1,1)=mean(out==y_tst);
   %% SVM
 %  [model,err,predictY,out]= SVC_lib_tt(x_trn,y_trn,ker,C,x_tst,y_tst);
 %    Acc(loop,2)=1-err;
-model = svmtrain(y_trn,x_trn,'-s 0 -t 2 -c 150');
+model = svmtrain(y_trn,x_trn,'-s 0 -t 0 -c 100');
 [out, accu, de] = svmpredict(y_tst, x_tst, model);
-Acc(loop,2)=mean(out==y_tst);
+% Acc(loop,2)=mean(out==y_tst);
+Acc(1,2)=mean(out==y_tst);
 %% SVM new senario
 % % % predict three categories
 % % y_trn_three = JaffeY_ThreeCate(trainindex,:);
@@ -56,8 +62,16 @@ Acc(loop,2)=mean(out==y_tst);
 % % [out10, accu, de] = svmpredict(y_tst(ind10), x_tst(ind10), model10);
 % % Acc(loop,5)=mean(out10==y_tst(ind10));
 
+% save x_trn.mat x_trn
+% save y_trn.mat y_trn
+% save x_tst.mat x_tst
+% save y_tst.mat y_tst
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -80,6 +94,6 @@ Acc(loop,2)=mean(out==y_tst);
 % % model2 = svmtrain(y_trn,X_trn,'-s 0 -t 2 -c 100');
 % % [out, accu, de] = svmpredict(y_tst, X_tst, model2);
 % % Acc(loop,3)=mean(out==y_tst);
-end
+% end
 mean(Acc)
 % Acc
