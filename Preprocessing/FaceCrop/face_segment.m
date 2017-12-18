@@ -39,10 +39,15 @@ ptFaceCenter.x     = recFace.x + recFace.width / 2;
 ptFaceCenter.y     = recFace.y + recFace.height / 2;
 
 %%%%%%%%%%%%%%%%%%%%以中心点为基准进行外扩（即对人脸选框进行调整）%%%%%%%%%%%%%%%%%%%%
-recFace.x         = ptFaceCenter.x - recFace.width * 0.4;
-recFace.y         = ptFaceCenter.y - recFace.height * 0.35;
-recFace.width     = recFace.width * 0.8 ;
-recFace.height    = recFace.height * 0.8 ;
+% recFace.x         = ptFaceCenter.x - recFace.width * 0.4;
+% recFace.y         = ptFaceCenter.y - recFace.height * 0.35;
+% recFace.width     = recFace.width * 0.8 ;
+% recFace.height    = recFace.height * 0.8 ;
+
+recFace.x         = ptFaceCenter.x - recFace.width * 0.3;
+recFace.y         = ptFaceCenter.y - recFace.height * 0.3;
+recFace.width     = recFace.width * 0.6 ;
+recFace.height    = recFace.height * 0.73 ;
 
 mFaceResult       = uint8(imcrop(mImageSrc,[recFace.x,recFace.y,recFace.width,recFace.height]));
 end
