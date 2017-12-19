@@ -7,6 +7,8 @@ load x_trn
 load x_tst
 load y_tst
 load y_trn
+load y_three
+load y_three_tst
 % clear Y1;
 % Y=Y1;
 N1=20;
@@ -68,8 +70,25 @@ Acc(1,2)=mean(out==y_tst);
 % save y_tst.mat y_tst
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ind_trn8 = find(y_trn==1|y_trn==2); 
+ind_trn9 = find(y_trn==3|y_trn==5);
+ind_trn10 = find(y_trn==4|y_trn==6);
+model8 = svmtrain(y_trn(ind_trn8),x_trn(ind_trn8),'-s 0 -t 2 -c 100');% model 8
+model9 = svmtrain(y_trn(ind_trn9),x_trn(ind_trn9),'-s 0 -t 0 -c 100');
+model10 = svmtrain(y_trn(ind_trn10),x_trn(ind_trn10),'-s 0 -t 0 -c 100');
+% predict three categories
+model = svmtrain(y_three,x_trn,'-s 0 -t 0 -c 100');
+[out_three, accu, de] = svmpredict(y_three_tst, x_tst, model);
+ind8 = find(out_three==8);
+ind9 = find(out_three == 9);
+ind10 = find(out_three == 10);
 
-
+[out8, accu, de] = svmpredict(y_tst(ind8), x_tst(ind8), model8);
+Acc(1,3)=mean(out8==y_tst(ind8));
+[out9, accu, de] = svmpredict(y_tst(ind9), x_tst(ind9), model9);
+Acc(1,4)=mean(out9==y_tst(ind9));
+[out10, accu, de] = svmpredict(y_tst(ind10), x_tst(ind10), model10);
+Acc(1,5)=mean(out10==y_tst(ind10));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -95,5 +114,5 @@ Acc(1,2)=mean(out==y_tst);
 % % [out, accu, de] = svmpredict(y_tst, X_tst, model2);
 % % Acc(loop,3)=mean(out==y_tst);
 % end
-mean(Acc)
+% mean(Acc)
 % Acc
