@@ -24,14 +24,64 @@ model = svmtrain(y_trn,x_trn,'-s 0 -t 2 -g 0.001 -c 100');
 [out, accu, de] = svmpredict(y_tst, x_tst, model);
 Acc(1,2)=mean(out==y_tst);
 
-confusionMatrix = zeros(7,7);
+confusionMatrix_former = zeros(7,7);
 
 for i=1:63
-        confusionMatrix(out(i),y_tst(i))=confusionMatrix(out(i),y_tst(i))+1;
+        confusionMatrix_former(out(i),y_tst(i))=confusionMatrix_former(out(i),y_tst(i))+1;
 end
 
 %% 4 5作为一个大类训练
+% 建立新的y_大类标签
+y_trnNewCate = zeros(120,1);
+y_tstNewCate = zeros(63,1);
+for i=1:120
+   if(y_trn(i,:)==1||y_trn(i,:)==3)
+       y_trnNewCate(i,:) = 8;
+   end
+   if(y_trn(i,:)==4||y_trn(i,:)==5)
+       y_trnNewCate(i,:) = 9;
+   end
+   if(y_trn(i,:)==2||y_trn(i,:)==6)
+       y_trnNewCate(i,:) = 10;
+   end
+end
 
+for i=1:63
+   if(y_tst(i,:)==1||y_tst(i,:)==3)
+       y_tstNewCate(i,:) = 8;
+   end
+   if(y_tst(i,:)==4||y_tst(i,:)==5)
+       y_tstNewCate(i,:) = 9;
+   end
+   if(y_tst(i,:)==2||y_tst(i,:)==6)
+       y_tstNewCate(i,:) = 10;
+   end
+end
+
+% 第一层训练与识别
+model = svmtrain(y_trnNewCate,x_trn,'-s 0 -t 2 -g 0.01 -c 100');
+[out_NewCate, accu, de] = svmpredict(y_tstNewCate, x_tst, model);
+
+% 第二层
+ind_trn8 = find(y_trn==1|y_trn==3); 
+ind_trn9 = find(y_trn==4|y_trn==5);
+ind_trn10 = find(y_trn==2|y_trn==6);
+model8 = svmtrain(y_trn(ind_trn8),x_trn(ind_trn8,:),'-s 0 -t 2 -g 0.01 -c 100');
+model9 = svmtrain(y_trn(ind_trn9),x_trn(ind_trn9,:),'-s 0 -t 2 -g 0.01 -c 100');
+model10 = svmtrain(y_trn(ind_trn10),x_trn(ind_trn10,:),'-s 0 -t 2 -g 0.01 -c 100');
+% 找出第一层预测结果，准备分别投入相应分类器进行第二层预测
+ind8 = find(out_NewCate==8);
+ind9 = find(out_NewCate == 9);
+ind10 = find(out_NewCate == 10);
+
+% 第二层预测
+[out8, accu, de] = svmpredict(y_tst(ind8), x_tst(ind8,:), model8);
+Acc(1,3)=mean(out8==y_tst(ind8));
+[out9, accu, de] = svmpredict(y_tst(ind9), x_tst(ind9,:), model9);
+Acc(1,4)=mean(out9==y_tst(ind9));
+[out10, accu, de] = svmpredict(y_tst(ind10), x_tst(ind10,:), model10);
+Acc(1,5)=mean(out10==y_tst(ind10));
+Acc(1,6)=  ( sum(out10==y_tst(ind10))+ sum(out9==y_tst(ind9)) + sum(out8==y_tst(ind8))   )/63;
 
 
 

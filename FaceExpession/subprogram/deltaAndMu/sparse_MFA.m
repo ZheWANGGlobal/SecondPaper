@@ -74,7 +74,7 @@ tq = size(U,2);
 [n,d]=size(X_trn);
 V = zeros(d,tq); B = zeros(d,tq);    
 delta=.01; mu=0.5;    % delta mu 作为参数 对比迭代得到的V和PU相乘的V
-% delta=.01; mu=0.5; i   % delta mu 作为参数 对比迭代得到的V和PU相乘的V
+% delta=.01; mu=1; i   % delta mu 作为参数 对比迭代得到的V和PU相乘的V
 epsilon=10^(-10);
 %线性迭代算法
 k=1;

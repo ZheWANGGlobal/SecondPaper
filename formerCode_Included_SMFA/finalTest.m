@@ -49,7 +49,7 @@ for loop=1:20
    y_trn=Y(ttrn);
    x_tst=X(ttst,:);
    y_tst=Y(ttst);
-   
+    
     [eigvectorPCA,eigvaluePCA] = PCA2(double(x_trn),1003);
     x_trn_PCA = double(x_trn)*eigvectorPCA;
     x_tst_PCA = double(x_tst)*eigvectorPCA; 
@@ -64,15 +64,15 @@ for loop=1:20
 %     end
 
     %% sparse MFA without PCA
-%      for i=1:20
-%         V_SMFA_PCA=sparse_MFA(x_trn,y_trn,i); 
-%         x_trn = double(x_trn);
-%         x_tst= double(x_tst);
-%         X_trn=x_trn*V_SMFA_PCA;
-%         X_tst=x_tst*V_SMFA_PCA;
-%         [out2]=cknear(knn,X_trn,y_trn,X_tst); 
-%         res2(loop,i)=mean(out2==y_tst);
-%      end
+     for i=1:20
+        V_SMFA_PCA=sparse_MFA(x_trn,y_trn,i); 
+        x_trn = double(x_trn);
+        x_tst= double(x_tst);
+        X_trn=x_trn*V_SMFA_PCA;
+        X_tst=x_tst*V_SMFA_PCA;
+        [out2]=cknear(knn,X_trn,y_trn,X_tst); 
+        res2(loop,i)=mean(out2==y_tst);
+     end
 
     %% MFA with PCA
 %     [V_MFA_PCA,inde] = MFA(x_trn_PCA,y_trn);
@@ -87,16 +87,16 @@ for loop=1:20
 %     end
 
     %% MFA without PCA
-%     [V_MFA,inde] = MFA(x_trn,y_trn);
-%     for i=1:20
-%         x_trn = double(x_trn);
-%         x_tst= double(x_tst);
-%         mapping=V_MFA(:,inde(end-i+1:end));
-%         X_trn=x_trn*mapping;
-%         X_tst=x_tst*mapping;
-%         [out4]=cknear(knn,X_trn,y_trn,X_tst); 
-%         res4(loop,i) = mean(out4==y_tst);
-%     end
+    [V_MFA,inde] = MFA(x_trn,y_trn);
+    for i=1:20
+        x_trn = double(x_trn);
+        x_tst= double(x_tst);
+        mapping=V_MFA(:,inde(end-i+1:end));
+        X_trn=x_trn*mapping;
+        X_tst=x_tst*mapping;
+        [out4]=cknear(knn,X_trn,y_trn,X_tst); 
+        res4(loop,i) = mean(out4==y_tst);
+    end
     
 %% Linear discriminant analysis
 x_trn = double(x_trn);
@@ -112,16 +112,16 @@ x_trn = double(x_trn);
     end
 
      %% lpp
-%     x_trn=double(x_trn);
-%     x_tst=double(x_tst);
-%     [~, V_LPP_ALL,V_LPP,inde] = lpp_self(x_trn_PCA);
-%     for i=1:20
-%         mapping = V_LPP(:,inde(1:i));
-%         X_trn=x_trn_PCA*mapping;
-%         X_tst=x_tst_PCA*mapping;
-%         [out6]=cknear(knn,X_trn,y_trn,X_tst); 
-%         res6(loop,i)=mean(out6==y_tst);
-%     end
+    x_trn=double(x_trn);
+    x_tst=double(x_tst);
+    [~, V_LPP_ALL,V_LPP,inde] = lpp_self(x_trn_PCA);
+    for i=1:20
+        mapping = V_LPP(:,inde(1:i));
+        X_trn=x_trn_PCA*mapping;
+        X_tst=x_tst_PCA*mapping;
+        [out6]=cknear(knn,X_trn,y_trn,X_tst); 
+        res6(loop,i)=mean(out6==y_tst);
+    end
     %% LFDA without PCA  
     x_trn_col = changeXRow2XCol(x_trn);
     x_tst_col = changeXRow2XCol(x_tst);
